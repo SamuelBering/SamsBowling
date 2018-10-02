@@ -7,13 +7,13 @@ using SamsBowling.Models;
 
 namespace SamsBowling.DL
 {
-    public class PlantRepository : IPlantRepository
+    public class MockPlantRepository : IPlantRepository
     {
-        PlantStorage _plantStorage;
+        public PlantInMemoryStorage PlantStorage { get; set; }
 
-        public PlantRepository()
+        public MockPlantRepository()
         {
-            _plantStorage = PlantStorage.Instance;
+            PlantStorage = PlantInMemoryStorage.Instance;
         }
 
         public void AddContest(Contest contest)
@@ -28,7 +28,7 @@ namespace SamsBowling.DL
 
         public void AddMember(Member member)
         {
-            _plantStorage.Members.Add(member.MemberNumber, member);
+            PlantStorage.Members.Add(member.MemberNumber, member);
         }
 
         public Contest GetContest(int contestNumber)
@@ -43,7 +43,7 @@ namespace SamsBowling.DL
 
         public Member GetMember(int memberNumber)
         {
-            return _plantStorage.Members[memberNumber];
+            return PlantStorage.Members[memberNumber];
         }
     }
 }

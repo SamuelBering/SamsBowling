@@ -47,8 +47,8 @@
     <Compile Include="Models\MatchLog.cs" />
     <Compile Include="BL\Plant.cs" />
     <Compile Include="DL\IPlantRepository.cs" />
-    <Compile Include="DL\PlantRepository.cs" />
-    <Compile Include="DL\PlantStorage.cs" />
+    <Compile Include="DL\MockPlantRepository.cs" />
+    <Compile Include="DL\PlantInMemoryStorage.cs" />
     <Compile Include="Models\Contest.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Member.cs" />

@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 namespace SamsBowling.DL
 {
 
-    public sealed class PlantStorage
+    public sealed class PlantInMemoryStorage
     {
-        private static PlantStorage instance = null;
+        private static PlantInMemoryStorage instance = null;
         private static readonly object padlock = new object();
 
         public Dictionary<int, Member> Members { get; set; }
         public Dictionary<int, Match> Matches { get; set; }
         public Dictionary<int, Contest> Contests { get; set; }
 
-        private PlantStorage()
+        private PlantInMemoryStorage()
         {
             Members = new Dictionary<int, Member>();
             Matches = new Dictionary<int, Match>();
             Contests = new Dictionary<int, Contest>();
         }
 
-        public static PlantStorage Instance
+        public static PlantInMemoryStorage Instance
         {
             get
             {
@@ -32,7 +32,7 @@ namespace SamsBowling.DL
                 {
                     if (instance == null)
                     {
-                        instance = new PlantStorage();
+                        instance = new PlantInMemoryStorage();
                     }
                     return instance;
                 }

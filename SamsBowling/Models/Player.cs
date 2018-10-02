@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SamsBowling.Models
 {
-    public class Player
+    public class Player : Member
     {
     }
 }

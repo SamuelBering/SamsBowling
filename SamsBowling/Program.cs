@@ -15,7 +15,7 @@ namespace SamsBowling
         static void Main(string[] args)
         {
 
-            PlantRepository plantRepository = new PlantRepository();
+            MockPlantRepository plantRepository = new MockPlantRepository();
             LogService logService = new LogService();
 
             Plant plant = new Plant(plantRepository, logService);
