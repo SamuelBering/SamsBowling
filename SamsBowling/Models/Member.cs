@@ -26,5 +26,16 @@ namespace SamsBowling.Models
                    $"Post town: {PostTown}\r\n" +
                    $"Email: {Email}";
         }
+
+        public void InitMember(Member member)
+        {
+            this.MemberNumber = member.MemberNumber;
+            this.FirstName = member.FirstName;
+            this.LastName = member.LastName;
+            this.StreetAddress = member.StreetAddress;
+            this.PostCode = member.PostCode;
+            this.PostTown = member.PostTown;
+            this.Email = member.Email; 
+        }
     }
 }

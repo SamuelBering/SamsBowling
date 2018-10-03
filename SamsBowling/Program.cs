@@ -16,7 +16,7 @@ namespace SamsBowling
         {
 
             MockPlantRepository plantRepository = new MockPlantRepository();
-            LogService logService = new LogService();
+            FileLogService logService = new FileLogService();
 
             Plant plant = new Plant(plantRepository, logService);
 

@@ -9,27 +9,84 @@ namespace MyFirstUnitTests
 {
     public class PlantTests
     {
+
+
         [Fact]
         public void RegisterMember_AddsMemberToStorage()
         {
-            MockPlantRepository repository = new MockPlantRepository();
-            LogService logService = new LogService();
-
-           
-
-            Plant plant = new Plant(repository, logService);
+            var dependencies = CreateMainDependencies();
 
             var members = GetMembers();
             var expectedMembers = 1;
             var expectedMemberFirstName = "Samuel";
 
-            plant.RegisterMember(members[0]);
+            dependencies.Plant.RegisterMember(members[0]);
+
+            Assert.Equal(expectedMembers, dependencies.Repository.PlantStorage.Members.Count);
+            Assert.Equal(expectedMemberFirstName, dependencies.Repository.PlantStorage.Members[members[0].MemberNumber].FirstName);
+        }
 
 
-            Assert.Equal(expectedMembers, repository.PlantStorage.Members.Count);
-            Assert.Equal(expectedMemberFirstName, repository.PlantStorage.Members[members[0].MemberNumber].FirstName);
+        [Fact]
+        public void GetMember_RecievesMember()
+        {
+            var dependencies = CreateMainDependencies();
+            var expectedMemberFirstName = "Samuel";
+            var expectedEmail = "samuel@gmail.com";
+            var member = dependencies.Plant.GetMember(1);
+
+            Assert.Equal(expectedMemberFirstName, member.FirstName);
+            Assert.Equal(expectedEmail, member.Email);
+
+        }
 
 
+        [Fact]
+        public void RegisterMatch_AddsMatchToStorage()
+        {
+            var dependencies = CreateMainDependencies();
+            var members = GetMembers();
+
+            dependencies.Plant.RegisterMember(members[1]);
+
+            var member1 = dependencies.Plant.GetMember(1);
+            var member2 = dependencies.Plant.GetMember(2);
+
+            var expectedMatches = 1;
+            var expectedPlayer1 = "Samuel";
+            var expectedPlayer2 = "Julian";
+
+            var match = new Match
+            {
+                MatchNumber = 1,
+                Player1 = new Player(member1),
+                Player2 = new Player(member2),
+            };
+
+            dependencies.Plant.RegisterMatch(match);
+
+
+            Assert.Equal(expectedMatches, dependencies.Repository.PlantStorage.Matches.Count);
+            Assert.Equal(expectedPlayer1, dependencies.Repository.PlantStorage.Matches[1].Player1.FirstName);
+            Assert.Equal(expectedPlayer2, dependencies.Repository.PlantStorage.Matches[1].Player2.FirstName);
+        }
+
+        class MainDependencies
+        {
+            public MockPlantRepository Repository { get; set; }
+            public ILogService LogService { get; set; }
+            public IPlant Plant { get; set; }
+        }
+
+        private MainDependencies CreateMainDependencies()
+        {
+            MainDependencies mainDependencies = new MainDependencies
+            {
+                Repository = new MockPlantRepository(),
+                LogService = new FileLogService(),
+            };
+            mainDependencies.Plant = new Plant(mainDependencies.Repository, mainDependencies.LogService);
+            return mainDependencies;
         }
 
         private List<Member> GetMembers()
@@ -61,15 +118,5 @@ namespace MyFirstUnitTests
             return members;
         }
 
-        //[Fact]
-        //public void FailingTest()
-        //{
-        //    Assert.Equal(5, Add(2, 2));
-        //}
-
-        int Add(int x, int y)
-        {
-            return x + y;
-        }
     }
 }

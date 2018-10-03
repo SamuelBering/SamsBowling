@@ -23,7 +23,7 @@ namespace SamsBowling.DL
 
         public void AddMatch(Match match)
         {
-            throw new NotImplementedException();
+            PlantStorage.Matches.Add(match.MatchNumber, match);
         }
 
         public void AddMember(Member member)

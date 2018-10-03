@@ -10,6 +10,6 @@ namespace SamsBowling.Services
 {
     public interface ILogService
     {
-        void OutputMatchLog(MatchLog matchLog);
+        void Output(string message);
     }
 }

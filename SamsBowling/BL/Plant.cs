@@ -37,7 +37,11 @@ namespace SamsBowling.BL
 
         public Member GetMember(int memberNumber)
         {
-           return _plantRepository.GetMember(memberNumber);
+            var member = _plantRepository.GetMember(memberNumber);
+
+            _logService.Output($"***Getting member***\r\n{member.ToString()}");
+
+            return member;
         }
 
         public void RegisterContest(Contest contest)
@@ -47,12 +51,15 @@ namespace SamsBowling.BL
 
         public void RegisterMatch(Match match)
         {
-            throw new NotImplementedException();
+            _plantRepository.AddMatch(match);
+            _logService.Output($"***Registering match***\r\n{match.ToString()}");
+
         }
 
         public void RegisterMember(Member member)
         {
             _plantRepository.AddMember(member);
+            _logService.Output($"***Registering member***\r\n{member.ToString()}");
         }
 
         public MatchLog RunMatch(Match match)
