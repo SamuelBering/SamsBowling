@@ -230,26 +230,38 @@ namespace MyFirstUnitTests
             var members = GetMembers();
 
             var matches = CreateMatches(members);
+            matches.Add(new Match
+            {
+                MatchNumber = 2,
+                Player1 = new Player(members[0]),
+                Player2 = new Player(members[3])
+            });
 
             var mockMatchResults = new List<MockMatchResult>
             {
                 new MockMatchResult
                 {
                     Player1Sets=CreateSets(50,50,100), //Samuel
-                    Player2Sets=CreateSets(100,100,100) //Julian
+                    Player2Sets=CreateSets(50,50,100) //Julian
                 },
                 new MockMatchResult
                 {
                     Player1Sets=CreateSets(50,50,100), //Linda
                     Player2Sets=CreateSets(50,50,100) //Elliot
+                },
+                new MockMatchResult
+                {
+                    Player1Sets=CreateSets(50,50,100), //Samuel
+                    Player2Sets=CreateSets(50,50,50) //Elliot
                 }
             };
+
             RegisterMembers(plant, members);
             RegisterMatches(plant, matches);
 
             RunMatches(plant, laneService, matches, mockMatchResults);
 
-            var expectedChampionOfTheYear = "Julian";
+            var expectedChampionOfTheYear = "Samuel";
 
             var actualChampionResult = plant.GetChampionOfTheYear(2018);
 
