@@ -39,7 +39,7 @@ namespace SamsBowling.Models
 
             if (Completed)
             {
-                var resultMessage = Winner != null ? $"winner is {Winner.FirstName} {Winner.LastName}" : "oavgjort";
+                var resultMessage = Winner != null ? $"winner is {Winner.FirstName} {Winner.LastName}" : "drawn";
 
                 str = $"Match number: {MatchNumber}\r\nStart date and time: {StartDateTime.ToString()}\r\nLane: {(Lane.LaneNumber)}\r\n" +
                        $"Player1: {Player1.FirstName} {Player1.LastName}\t\tPlayer2: {Player2.FirstName} {Player2.LastName}\r\n" +

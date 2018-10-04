@@ -23,6 +23,6 @@ namespace SamsBowling.BL
 
         MatchResult RunMatch(Match match);
 
-        Player GetChampionOfTheYear(int year);
+        ChampionResult GetChampionOfTheYear(int year);
     }
 }

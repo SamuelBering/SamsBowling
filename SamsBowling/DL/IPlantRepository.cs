@@ -15,5 +15,6 @@ namespace SamsBowling.DL
         Member GetMember(int memberNumber);
         Match GetMatch(int matchNumber);
         Contest GetContest(int contestNumber);
+        List<Match> GetCompletedMatches(DateTime startDateTime, DateTime endDateTime);
     }
 }

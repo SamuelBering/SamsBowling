@@ -11,7 +11,7 @@ namespace SamsBowling.BL
 {
     public class Plant : IPlant
     {
-        
+
         PlantDependencies _plantDependencies;
 
         public Plant(PlantDependencies plantDependencies)
@@ -19,9 +19,12 @@ namespace SamsBowling.BL
             _plantDependencies = plantDependencies;
         }
 
-        public Player GetChampionOfTheYear(int year)
+        public ChampionResult GetChampionOfTheYear(int year)
         {
-            throw new NotImplementedException();
+            var matches = _plantDependencies.PlantRepository.GetCompletedMatches(new DateTime(year, 1, 1), new DateTime(year, 12, 31));
+            var championResult = _plantDependencies.CalculateChampionStrategy.CalculateChampion(matches);
+            _plantDependencies.LogService.Output($"***Getting champion of the year: {year}***\r\n{championResult.ToString()}");
+            return championResult;
         }
 
         public Contest GetContest(int contestNumber)

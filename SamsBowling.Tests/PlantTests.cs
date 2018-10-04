@@ -114,8 +114,8 @@ namespace MyFirstUnitTests
 
             plant.RegisterMatch(match);
 
-            laneService.Player1Sets = createSets(player1Set1, player1Set2, player1Set3);
-            laneService.Player2Sets = createSets(player2Set1, player2Set2, player2Set3);
+            laneService.Player1Sets = CreateSets(player1Set1, player1Set2, player1Set3);
+            laneService.Player2Sets = CreateSets(player2Set1, player2Set2, player2Set3);
 
 
             var matchResult = plant.RunMatch(match);
@@ -219,10 +219,65 @@ namespace MyFirstUnitTests
         }
 
 
+        [Fact]
+        public void GetChampionOfTheYear_ReturnsCorrectChampionResult()
+        {
+            var dependencies = CreatePlantDependencies();
+            var laneService = dependencies.LaneService as MockLaneService;
 
+            var plant = new Plant(dependencies);
 
+            var members = GetMembers();
 
+            var matches = CreateMatches(members);
 
+            var mockMatchResults = new List<MockMatchResult>
+            {
+                new MockMatchResult
+                {
+                    Player1Sets=CreateSets(50,50,100), //Samuel
+                    Player2Sets=CreateSets(100,100,100) //Julian
+                },
+                new MockMatchResult
+                {
+                    Player1Sets=CreateSets(50,50,100), //Linda
+                    Player2Sets=CreateSets(50,50,100) //Elliot
+                }
+            };
+            RegisterMembers(plant, members);
+            RegisterMatches(plant, matches);
+
+            RunMatches(plant, laneService, matches, mockMatchResults);
+
+            var expectedChampionOfTheYear = "Julian";
+
+            var actualChampionResult = plant.GetChampionOfTheYear(2018);
+
+            Assert.Equal(expectedChampionOfTheYear, actualChampionResult.Member.FirstName);
+
+        }
+
+        class MockMatchResult
+        {
+            public Set[] Player1Sets { get; set; }
+            public Set[] Player2Sets { get; set; }
+        }
+
+        private void RunMatches(Plant plant, MockLaneService laneService, List<Match> matches, List<MockMatchResult> matchResults)
+        {
+            for (var i = 0; i < matches.Count; i++)
+            {
+                laneService.Player1Sets = matchResults[i].Player1Sets;
+                laneService.Player2Sets = matchResults[i].Player2Sets;
+                plant.RunMatch(matches[i]);
+            }
+        }
+
+        private void RegisterMembers(Plant plant, List<Member> members)
+        {
+            foreach (var member in members)
+                plant.RegisterMember(member);
+        }
 
         private void RegisterMatches(Plant plant, List<Match> matches)
         {
@@ -230,7 +285,7 @@ namespace MyFirstUnitTests
                 plant.RegisterMatch(match);
         }
 
-        private Set[] createSets(int set1Points, int set2Points, int set3Points)
+        private Set[] CreateSets(int set1Points, int set2Points, int set3Points)
         {
             var sets = new Set[3]
              {
@@ -265,7 +320,8 @@ namespace MyFirstUnitTests
                 PlantRepository = new MockPlantRepository(),
                 LogService = new FileLogService(),
                 ExportMemberService = new ExportMemberService(),
-                LaneService = new MockLaneService(10, new MostPointsWinsStrategy())
+                LaneService = new MockLaneService(10, new MostPointsWinsStrategy()),
+                CalculateChampionStrategy = new WonHighestProportionOfMatches()
             };
 
             var repository = plantDependencies.PlantRepository as MockPlantRepository;

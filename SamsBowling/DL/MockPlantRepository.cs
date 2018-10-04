@@ -45,5 +45,11 @@ namespace SamsBowling.DL
         {
             return PlantStorage.Members[memberNumber];
         }
+
+        public List<Match> GetCompletedMatches(DateTime startDateTime, DateTime endDateTime)
+        {
+            var matches = PlantStorage.Matches.Where(kvp => kvp.Value.StartDateTime >= startDateTime && kvp.Value.StartDateTime <= endDateTime && kvp.Value.Completed).Select(kvp => kvp.Value).ToList();
+            return matches;
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace SamsBowling.Models
         public ILogService LogService { get; set; }
         public ILaneService LaneService { get; set; }
         public IExportMemberService ExportMemberService { get; set; }
+        public CalculateChampionStrategy CalculateChampionStrategy { get; set; }
     }
 }
