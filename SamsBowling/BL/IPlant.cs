@@ -21,7 +21,7 @@ namespace SamsBowling.BL
 
         Contest GetContest(int contestNumber);
 
-        MatchLog RunMatch(Match match);
+        MatchResult RunMatch(Match match);
 
         Player GetChampionOfTheYear(int year);
     }

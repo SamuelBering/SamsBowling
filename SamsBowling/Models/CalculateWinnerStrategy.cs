@@ -8,5 +8,6 @@ namespace SamsBowling.Models
 {
     public abstract class CalculateWinnerStrategy
     {
+        public abstract MatchResult CalculateWinner(Match match);
     }
 }

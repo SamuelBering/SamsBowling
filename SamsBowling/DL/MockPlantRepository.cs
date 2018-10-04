@@ -18,7 +18,7 @@ namespace SamsBowling.DL
 
         public void AddContest(Contest contest)
         {
-            throw new NotImplementedException();
+            PlantStorage.Contests.Add(contest.ContestNumber, contest);
         }
 
         public void AddMatch(Match match)
@@ -33,12 +33,12 @@ namespace SamsBowling.DL
 
         public Contest GetContest(int contestNumber)
         {
-            throw new NotImplementedException();
+            return PlantStorage.Contests[contestNumber];
         }
 
         public Match GetMatch(int matchNumber)
         {
-            throw new NotImplementedException();
+            return PlantStorage.Matches[matchNumber];
         }
 
         public Member GetMember(int memberNumber)

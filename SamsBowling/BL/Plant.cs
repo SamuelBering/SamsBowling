@@ -11,13 +11,12 @@ namespace SamsBowling.BL
 {
     public class Plant : IPlant
     {
-        private IPlantRepository _plantRepository;
-        private ILogService _logService;
+        
+        PlantDependencies _plantDependencies;
 
-        public Plant(IPlantRepository plantRepository, ILogService logService)
+        public Plant(PlantDependencies plantDependencies)
         {
-            _plantRepository = plantRepository;
-            _logService = logService;
+            _plantDependencies = plantDependencies;
         }
 
         public Player GetChampionOfTheYear(int year)
@@ -27,44 +26,54 @@ namespace SamsBowling.BL
 
         public Contest GetContest(int contestNumber)
         {
-            throw new NotImplementedException();
+            var contest = _plantDependencies.PlantRepository.GetContest(contestNumber);
+            _plantDependencies.LogService.Output($"***Getting contest***\r\n{contest.ToString()}");
+            return contest;
         }
 
         public Match GetMatch(int matchNumber)
         {
-            throw new NotImplementedException();
+            var match = _plantDependencies.PlantRepository.GetMatch(matchNumber);
+            _plantDependencies.LogService.Output($"***Getting match***\r\n{match.ToString()}");
+            return match;
         }
 
         public Member GetMember(int memberNumber)
         {
-            var member = _plantRepository.GetMember(memberNumber);
+            var member = _plantDependencies.PlantRepository.GetMember(memberNumber);
 
-            _logService.Output($"***Getting member***\r\n{member.ToString()}");
+            _plantDependencies.LogService.Output($"***Getting member***\r\n{member.ToString()}");
 
             return member;
         }
 
         public void RegisterContest(Contest contest)
         {
-            throw new NotImplementedException();
+            _plantDependencies.PlantRepository.AddContest(contest);
+            _plantDependencies.LogService.Output($"***Registering contest***\r\n{contest.ToString()}");
+
         }
 
         public void RegisterMatch(Match match)
         {
-            _plantRepository.AddMatch(match);
-            _logService.Output($"***Registering match***\r\n{match.ToString()}");
+            _plantDependencies.PlantRepository.AddMatch(match);
+            _plantDependencies.LogService.Output($"***Registering match***\r\n{match.ToString()}");
 
         }
 
         public void RegisterMember(Member member)
         {
-            _plantRepository.AddMember(member);
-            _logService.Output($"***Registering member***\r\n{member.ToString()}");
+            _plantDependencies.PlantRepository.AddMember(member);
+            _plantDependencies.LogService.Output($"***Registering member***\r\n{member.ToString()}");
         }
 
-        public MatchLog RunMatch(Match match)
+        public MatchResult RunMatch(Match match)
         {
-            throw new NotImplementedException();
+            var matchResult = _plantDependencies.LaneService.RunMatch(match);
+
+            _plantDependencies.LogService.Output($"***Running match***\r\n{match.ToString()}");
+
+            return matchResult;
         }
     }
 }

@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace SamsBowling.Models
 {
-    public class MatchLog
+    public interface ILaneService
     {
-        public string Log { get; set; }
+        CalculateWinnerStrategy CalculateWinnerStrategy { get; set; }
+        MatchResult RunMatch(Match match);
     }
 }

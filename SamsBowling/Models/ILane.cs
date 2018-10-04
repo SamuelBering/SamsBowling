@@ -10,9 +10,11 @@ namespace SamsBowling.Models
     {
         int LaneNumber { get; set; }
 
-        void SetCalculateWinnerStrategy(CalculateWinnerStrategy cWStrategy);
+        bool Occupied { get; set; }
 
-        void RunMatch(Match match);
+        CalculateWinnerStrategy CalculateWinnerStrategy { get; set; }
+
+        MatchResult RunMatch(Match match);
 
     }
 }
