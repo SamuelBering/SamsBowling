@@ -50,7 +50,7 @@ namespace SamsBowling.Models
                        $"\r\nResult: {resultMessage}";
             }
             else
-                str = $"Match number: {MatchNumber} - EJ GENOMFÖRD -\r\n" +
+                str = $"Match number: {MatchNumber} - Not completed -\r\n" +
                        $"Player1: {Player1.FirstName} {Player1.LastName}\tPlayer2: {Player2.FirstName} {Player2.LastName}\r\n";
 
             return str;

@@ -151,6 +151,85 @@ namespace MyFirstUnitTests
         }
 
 
+        [Fact]
+        public void RegisterContest_WithMatches_AddsContestToStorage()
+        {
+            var dependencies = CreatePlantDependencies();
+            var plantRepository = dependencies.PlantRepository as MockPlantRepository;
+
+            var plant = new Plant(dependencies);
+
+
+            var contest = new Contest
+            {
+                ContestNumber = 1,
+                Title = "Bengan cup",
+                Description = "Bengans häftiga cup",
+                StartDateTime = new DateTime(2019, 1, 1, 08, 15, 0),
+                EndDateTime = new DateTime(2019, 06, 10, 23, 00, 0),
+            };
+
+            var members = GetMembers();
+            var matches = CreateMatches(members);
+            contest.Matches = matches;
+
+            var expectedContestTitle = contest.Title;
+            var expectedNumberOfContests = 1;
+            var expectedNumberOfMatches = 2;
+
+            plant.RegisterContest(contest);
+
+            Assert.StrictEqual(expectedNumberOfMatches, plantRepository.PlantStorage.Contests[contest.ContestNumber].Matches.Count);
+            Assert.StrictEqual(expectedNumberOfContests, plantRepository.PlantStorage.Contests.Count);
+            Assert.Equal(expectedContestTitle, plantRepository.PlantStorage.Contests[contest.ContestNumber].Title);
+        }
+
+
+        [Fact]
+        public void GetContest_Recieves_Contest()
+        {
+            var dependencies = CreatePlantDependencies();
+            var plantRepository = dependencies.PlantRepository as MockPlantRepository;
+
+            var plant = new Plant(dependencies);
+
+            var expectedContest = new Contest
+            {
+                ContestNumber = 1,
+                Title = "Bengan cup",
+                Description = "Bengans häftiga cup",
+                StartDateTime = new DateTime(2019, 1, 1, 08, 15, 0),
+                EndDateTime = new DateTime(2019, 06, 10, 23, 00, 0),
+            };
+
+            var members = GetMembers();
+            var matches = CreateMatches(members);
+            expectedContest.Matches = matches;
+
+
+            plant.RegisterContest(expectedContest);
+
+            var actualContest = plant.GetContest(expectedContest.ContestNumber);
+
+            Assert.StrictEqual(expectedContest.Matches.Count, actualContest.Matches.Count);
+
+            Assert.Equal(expectedContest.Title, actualContest.Title);
+            Assert.Equal(expectedContest.Description, actualContest.Description);
+
+        }
+
+
+
+
+
+
+
+        private void RegisterMatches(Plant plant, List<Match> matches)
+        {
+            foreach (var match in matches)
+                plant.RegisterMatch(match);
+        }
+
         private Set[] createSets(int set1Points, int set2Points, int set3Points)
         {
             var sets = new Set[3]
@@ -198,6 +277,27 @@ namespace MyFirstUnitTests
             return plantDependencies;
         }
 
+
+        private List<Match> CreateMatches(List<Member> members)
+        {
+            if (members.Count < 2 || members.Count % 2 == 1)
+                throw new InvalidOperationException("List must be minimum 2 members and even couples");
+
+            var matches = new List<Match>();
+
+            for (var i = 0; i < members.Count; i += 2)
+            {
+                matches.Add(new Match
+                {
+                    Player1 = new Player(members[i]),
+                    Player2 = new Player(members[i + 1]),
+                    MatchNumber = i / 2
+                });
+            }
+
+            return matches;
+        }
+
         private List<Member> GetMembers()
         {
             List<Member> members = new List<Member>
@@ -218,6 +318,26 @@ namespace MyFirstUnitTests
                 LastName = "Gagnestam",
                 Email = "julian@gmail.com",
                 MemberNumber = 2,
+                PostCode = "12060",
+                StreetAddress = "Järnlundsv 17",
+                PostTown = "Årsta"
+                },
+                 new Member
+                {
+                FirstName = "Linda",
+                LastName = "Gagnestam",
+                Email = "linda@gmail.com",
+                MemberNumber = 3,
+                PostCode = "12060",
+                StreetAddress = "Järnlundsv 17",
+                PostTown = "Årsta"
+                },
+                  new Member
+                {
+                FirstName = "Elliot",
+                LastName = "Gagnestam",
+                Email = "elliot@gmail.com",
+                MemberNumber = 4,
                 PostCode = "12060",
                 StreetAddress = "Järnlundsv 17",
                 PostTown = "Årsta"

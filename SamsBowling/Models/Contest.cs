@@ -17,12 +17,32 @@ namespace SamsBowling.Models
 
         public override string ToString()
         {
+            var matchInfo = CreateMatchInfo();
+
             return $"Contest number: {ContestNumber}\r\n" +
                    $"Title: {Title}\r\n" +
                    $"Description: {Description}\r\n" +
                    $"Start date and time: {StartDateTime.ToString()}\r\n" +
-                   $"End date and time {EndDateTime.ToString()}\r\n" +
-                   $"Antal matcher: {Matches?.Count ?? 0}\r\n";
+                   $"End date and time {EndDateTime.ToString()}\r\n\r\n" +
+                   $"Match information:\r\n" +
+                   $"{matchInfo}";
+        }
+
+        private string CreateMatchInfo()
+        {
+            var matchInfo = "";
+
+            if (Matches != null && Matches.Count > 0)
+            {
+                matchInfo = $"Number of matches: {Matches.Count}\r\n---------------------------\r\n";
+
+                foreach (var match in Matches)
+                    matchInfo += $"{match.ToString()}\r\n";
+            }
+            else
+                matchInfo = "No matches registered";
+
+            return matchInfo;
         }
     }
 }
