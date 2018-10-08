@@ -184,6 +184,38 @@ namespace MyFirstUnitTests
             Assert.Equal(expectedContestTitle, plantRepository.PlantStorage.Contests[contest.ContestNumber].Title);
         }
 
+        [Theory]
+        [InlineData(0, 1, 2, 3, 0, 1)]
+        [InlineData(0, 1, 2, 3, 1, 0)]
+        public void RegisterContest_WithMatchesContainingSamePlayers_ThrowsException(int match1Player1, int match1Player2,
+                                                                  int match2Player1, int match2Player2,
+                                                                  int match3Player1, int match3Player2)
+        {
+            var dependencies = CreatePlantDependencies();
+            var plantRepository = dependencies.PlantRepository as MockPlantRepository;
+            var plant = new Plant(dependencies);
+
+            var contest = new Contest
+            {
+                ContestNumber = 1,
+                Title = "Bengan cup",
+                Description = "Bengans häftiga cup",
+                StartDateTime = new DateTime(2019, 1, 1, 08, 15, 0),
+                EndDateTime = new DateTime(2019, 06, 10, 23, 00, 0),
+            };
+
+            var members = GetMembers();
+
+            var matches = CreateMatches(members[match1Player1], members[match1Player2],
+                                        members[match2Player1], members[match2Player2],
+                                        members[match3Player1], members[match3Player2]);
+
+            contest.Matches = matches;
+
+            var ex = Assert.Throws<InvalidOperationException>(() => plant.RegisterContest(contest));
+            Assert.Equal("Two matches can't contain the same players", ex.Message);
+        }
+
 
         [Fact]
         public void GetContest_Recieves_Contest()
@@ -219,8 +251,13 @@ namespace MyFirstUnitTests
         }
 
 
-        [Fact]
-        public void GetChampionOfTheYear_ReturnsCorrectChampionResult()
+        [Theory]
+        [InlineData(0, 1, 2, 3, 0, 3, 1, 2, "Samuel", "Linda")]
+        public void GetChampionOfTheYear_WhenMoreThanOneChampion_ReturnsCorrectChampionResult(int match1Player1, int match1Player2,
+                                                                  int match2Player1, int match2Player2,
+                                                                  int match3Player1, int match3Player2,
+                                                                  int match4Player1, int match4Player2,
+                                                                  string expectedChampion1, string expectedChampion2)
         {
             var dependencies = CreatePlantDependencies();
             var laneService = dependencies.LaneService as MockLaneService;
@@ -229,30 +266,34 @@ namespace MyFirstUnitTests
 
             var members = GetMembers();
 
-            var matches = CreateMatches(members);
-            matches.Add(new Match
-            {
-                MatchNumber = 2,
-                Player1 = new Player(members[0]),
-                Player2 = new Player(members[3])
-            });
+
+
+            var matches = CreateMatches(members[match1Player1], members[match1Player2],
+                                        members[match2Player1], members[match2Player2],
+                                        members[match3Player1], members[match3Player2],
+                                        members[match4Player1], members[match4Player2]);
 
             var mockMatchResults = new List<MockMatchResult>
             {
                 new MockMatchResult
                 {
-                    Player1Sets=CreateSets(50,50,100), //Samuel
-                    Player2Sets=CreateSets(50,50,100) //Julian
+                    Player1Sets=CreateSets(50,50,100), //Samuel (0 / 1), Samuel (0)
+                    Player2Sets=CreateSets(50,50,100) //Julian (0 / 1), Linda (0)
                 },
                 new MockMatchResult
                 {
-                    Player1Sets=CreateSets(50,50,100), //Linda
-                    Player2Sets=CreateSets(50,50,100) //Elliot
+                    Player1Sets=CreateSets(50,50,100), //Linda (0 / 1), Julian (0)
+                    Player2Sets=CreateSets(50,50,100) //Elliot (0 / 1), Elliot (0)
                 },
                 new MockMatchResult
                 {
-                    Player1Sets=CreateSets(50,50,100), //Samuel
-                    Player2Sets=CreateSets(50,50,50) //Elliot
+                    Player1Sets=CreateSets(50,50,100), //Samuel (1 / 2), Julian (1 av 2)
+                    Player2Sets=CreateSets(50,50,50) //Elliot (0 / 2), Linda (0)
+                },
+                 new MockMatchResult
+                {
+                    Player1Sets=CreateSets(100,99,100), //Julian (0 / 2), Julian (0)
+                    Player2Sets=CreateSets(100,100,100) //Linda (1 av 2), Elliot (1 av 2)
                 }
             };
 
@@ -261,13 +302,87 @@ namespace MyFirstUnitTests
 
             RunMatches(plant, laneService, matches, mockMatchResults);
 
-            var expectedChampionOfTheYear = "Samuel";
 
-            var actualChampionResult = plant.GetChampionOfTheYear(2018);
+            var expectedNumberOfChampions = 2;
 
-            Assert.Equal(expectedChampionOfTheYear, actualChampionResult.Member.FirstName);
+            var actualChampionResults = plant.GetChampionsOfTheYear(2018);
+
+            Assert.Equal(expectedNumberOfChampions, actualChampionResults.Count);
+
+            Assert.True((expectedChampion1 == actualChampionResults[0].Member.FirstName
+                        && expectedChampion2 == actualChampionResults[1].Member.FirstName)
+                        ||
+                        (expectedChampion2 == actualChampionResults[0].Member.FirstName
+                        && expectedChampion1 == actualChampionResults[1].Member.FirstName));
+
+
 
         }
+
+        [Theory]
+        [InlineData(0, 2, 1, 3, 1, 2, 1, 3, "Elliot")]
+        [InlineData(0, 1, 2, 3, 0, 3, 1, 3, "Samuel")]
+        public void GetChampionOfTheYear_ReturnsCorrectChampionResult(int match1Player1, int match1Player2,
+                                                                 int match2Player1, int match2Player2,
+                                                                 int match3Player1, int match3Player2,
+                                                                 int match4Player1, int match4Player2,
+                                                                 string expectedChampion)
+        {
+            var dependencies = CreatePlantDependencies();
+            var laneService = dependencies.LaneService as MockLaneService;
+
+            var plant = new Plant(dependencies);
+
+            var members = GetMembers();
+
+
+
+            var matches = CreateMatches(members[match1Player1], members[match1Player2],
+                                        members[match2Player1], members[match2Player2],
+                                        members[match3Player1], members[match3Player2],
+                                        members[match4Player1], members[match4Player2]);
+
+            var mockMatchResults = new List<MockMatchResult>
+            {
+                new MockMatchResult
+                {
+                    Player1Sets=CreateSets(50,50,100), //Samuel (0), Samuel (0)
+                    Player2Sets=CreateSets(50,50,100) //Julian (0), Linda (0)
+                },
+                new MockMatchResult
+                {
+                    Player1Sets=CreateSets(50,50,100), //Linda (0), Julian (0)
+                    Player2Sets=CreateSets(50,50,100) //Elliot (0), Elliot (0)
+                },
+                new MockMatchResult
+                {
+                    Player1Sets=CreateSets(50,50,100), //Samuel (1 av 2), Julian (1 av 2)
+                    Player2Sets=CreateSets(50,50,50) //Elliot (0), Linda (0)
+                },
+                 new MockMatchResult
+                {
+                    Player1Sets=CreateSets(100,99,100), //Julian (0), Julian (0)
+                    Player2Sets=CreateSets(100,100,100) //Elliot (0 av 3), Elliot (1 av 2)
+                }
+            };
+
+            RegisterMembers(plant, members);
+            RegisterMatches(plant, matches);
+
+            RunMatches(plant, laneService, matches, mockMatchResults);
+
+            var expectedChampionOfTheYear = expectedChampion;
+            var expectedNumberOfChampions = 1;
+
+            var actualChampionResults = plant.GetChampionsOfTheYear(2018);
+
+            Assert.Equal(expectedNumberOfChampions, actualChampionResults.Count);
+
+            Assert.Equal(expectedChampionOfTheYear, actualChampionResults[0].Member.FirstName);
+
+        }
+
+
 
         class MockMatchResult
         {
@@ -365,6 +480,29 @@ namespace MyFirstUnitTests
 
             return matches;
         }
+
+
+        private List<Match> CreateMatches(params Member[] members)
+        {
+            if (members.Length < 2 || members.Length % 2 == 1)
+                throw new InvalidOperationException("Array must be minimum 2 members and even couples");
+
+            var matches = new List<Match>();
+
+            for (var i = 0; i < members.Length; i += 2)
+            {
+                matches.Add(new Match
+                {
+                    Player1 = new Player(members[i]),
+                    Player2 = new Player(members[i + 1]),
+                    MatchNumber = i / 2
+                });
+            }
+
+            return matches;
+        }
+
+
 
         private List<Member> GetMembers()
         {

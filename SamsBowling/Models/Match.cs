@@ -32,9 +32,20 @@ namespace SamsBowling.Models
         public DateTime StartDateTime { get; set; }
         public Player Winner { get; set; }
 
+        public static bool HasSamePlayers(Match match1, Match match2)
+        {
+            if ((match1.Player1.MemberNumber == match2.Player1.MemberNumber &&
+                match1.Player2.MemberNumber == match2.Player2.MemberNumber) ||
+                (match1.Player1.MemberNumber == match2.Player2.MemberNumber &&
+                match1.Player2.MemberNumber == match2.Player1.MemberNumber))
+                return true;
+            else
+                return false;
+        }
+
         public override string ToString()
         {
-           
+
             string str;
 
             if (Completed)
@@ -58,5 +69,5 @@ namespace SamsBowling.Models
 
     }
 
-    
+
 }

@@ -19,12 +19,13 @@ namespace SamsBowling.BL
             _plantDependencies = plantDependencies;
         }
 
-        public ChampionResult GetChampionOfTheYear(int year)
+        public List<ChampionResult> GetChampionsOfTheYear(int year)
         {
             var matches = _plantDependencies.PlantRepository.GetCompletedMatches(new DateTime(year, 1, 1), new DateTime(year, 12, 31));
-            var championResult = _plantDependencies.CalculateChampionStrategy.CalculateChampion(matches);
-            _plantDependencies.LogService.Output($"***Getting champion of the year: {year}***\r\n{championResult.ToString()}");
-            return championResult;
+            var championResults = _plantDependencies.CalculateChampionStrategy.CalculateChampion(matches);
+            _plantDependencies.LogService.Output($"***Getting champion(s) of the year: {year}***\r\n");
+            _plantDependencies.LogService.Output(championResults);
+            return championResults;
         }
 
         public Contest GetContest(int contestNumber)
@@ -52,6 +53,13 @@ namespace SamsBowling.BL
 
         public void RegisterContest(Contest contest)
         {
+            if (!contest.MatchesIsValid())
+            {
+                var errorMessage = "Two matches can't contain the same players";
+                _plantDependencies.LogService.Output($"***Can´t register contest!!***\r\nError message: {errorMessage}\r\n{contest.ToString()}");
+                throw new InvalidOperationException(errorMessage);
+            }
+             
             _plantDependencies.PlantRepository.AddContest(contest);
             _plantDependencies.LogService.Output($"***Registering contest***\r\n{contest.ToString()}");
 

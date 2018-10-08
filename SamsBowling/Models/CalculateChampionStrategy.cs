@@ -8,6 +8,6 @@ namespace SamsBowling.Models
 {
     public abstract class CalculateChampionStrategy
     {
-        public abstract ChampionResult CalculateChampion(List<Match> matches);
+        public abstract List<ChampionResult> CalculateChampion(List<Match> matches);
     }
 }

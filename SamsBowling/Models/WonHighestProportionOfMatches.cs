@@ -47,29 +47,41 @@ namespace SamsBowling.Models
             }
         }
 
-        private PlayerWithStatistic GetPlayerWithHighestProportionOfWonMatches(List<PlayerWithStatistic> players)
+        private List<PlayerWithStatistic> GetPlayersWithHighestProportionOfWonMatches(List<PlayerWithStatistic> players)
         {
-            return players.OrderByDescending(p => p.wonMatchesPercent).First();
+            var player = players.OrderByDescending(p => p.wonMatchesPercent).First();
+            return players.Where(p => p.wonMatchesPercent == player.wonMatchesPercent).ToList();
         }
 
-        public override ChampionResult CalculateChampion(List<Match> matches)
+        public override List<ChampionResult> CalculateChampion(List<Match> matches)
         {
             var playersWithStatistic = GetUniquePlayers(matches);
 
             CalculateStatistic(playersWithStatistic, matches);
 
-            var playerWithHighestProportionOfWonMatches = GetPlayerWithHighestProportionOfWonMatches(playersWithStatistic);
+            var playersWithHighestProportionOfWonMatches = GetPlayersWithHighestProportionOfWonMatches(playersWithStatistic);
 
-            var championResult = new ChampionResult
-            {
-                Member = playerWithHighestProportionOfWonMatches.Member,
-                Matches = playerWithHighestProportionOfWonMatches.Matches,
-                TotalMatches = playerWithHighestProportionOfWonMatches.totalMatches,
-                WonMatches = playerWithHighestProportionOfWonMatches.wonMatches,
-                WonMatchesPercent = playerWithHighestProportionOfWonMatches.wonMatchesPercent
-            };
 
-            return championResult;
+            var championResults = playersWithHighestProportionOfWonMatches.Select(p =>
+              new ChampionResult
+              {
+                  Member = p.Member,
+                  Matches = p.Matches,
+                  TotalMatches = p.totalMatches,
+                  WonMatches = p.wonMatches,
+                  WonMatchesPercent = p.wonMatchesPercent
+              }).ToList();
+
+            //var championResult = new ChampionResult
+            //{
+            //    Member = playerWithHighestProportionOfWonMatches.Member,
+            //    Matches = playerWithHighestProportionOfWonMatches.Matches,
+            //    TotalMatches = playerWithHighestProportionOfWonMatches.totalMatches,
+            //    WonMatches = playerWithHighestProportionOfWonMatches.wonMatches,
+            //    WonMatchesPercent = playerWithHighestProportionOfWonMatches.wonMatchesPercent
+            //};
+
+            return championResults;
 
             /*
              * gör en lista av unika spelareMedStatistik från alla matcher

@@ -25,5 +25,17 @@ namespace SamsBowling.Services
                 writer.WriteLine(message);
             }
         }
+
+        public void Output(List<ChampionResult> championResults)
+        {
+            if (championResults.Count > 1)
+                Output($"-Champions of the year-\r\n");
+            else
+                Output($"-Champion of the year-\r\n");
+
+            foreach (var championResult in championResults)
+                Output(championResult.ToString());
+        }
+
     }
 }

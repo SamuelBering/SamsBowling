@@ -28,6 +28,33 @@ namespace SamsBowling.Models
                    $"{matchInfo}";
         }
 
+        public bool MatchesIsValid()
+        {
+
+            //skapa validatedmatches
+            //loopa igenom matcherna
+            //  loopa igenom validatedMatches
+            //     om match==validateMatch
+            //        throw ex
+            //  lägg till match i validatedMatches
+            if (Matches == null)
+                return true;
+
+            List<Match> validMatches = new List<Match>();
+
+            foreach (var match in Matches)
+            {
+                foreach(var validMatch in validMatches)
+                {
+                    if (Match.HasSamePlayers(match, validMatch))
+                        return false;
+                }
+                validMatches.Add(match);
+            }
+
+            return true;
+        }
+
         private string CreateMatchInfo()
         {
             var matchInfo = "";
