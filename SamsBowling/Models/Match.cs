@@ -29,7 +29,7 @@ namespace SamsBowling.Models
             }
         }
         public ILane Lane { get; set; }
-        public DateTime StartDateTime { get; set; }
+        public DateTime? StartDateTime { get; set; }
         public Player Winner { get; set; }
 
         public static bool HasSamePlayers(Match match1, Match match2)

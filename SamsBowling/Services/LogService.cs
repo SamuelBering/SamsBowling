@@ -26,6 +26,12 @@ namespace SamsBowling.Services
             }
         }
 
+        private void OutputChampionResults(List<ChampionResult> championResults)
+        {
+            foreach (var championResult in championResults)
+                Output(championResult.ToString());
+        }
+
         public void Output(List<ChampionResult> championResults)
         {
             if (championResults.Count > 1)
@@ -33,8 +39,25 @@ namespace SamsBowling.Services
             else
                 Output($"-Champion of the year-\r\n");
 
-            foreach (var championResult in championResults)
-                Output(championResult.ToString());
+            OutputChampionResults(championResults);
+        }
+
+        private void OutputChampionResults(List<ChampionResult> championResults, string title)
+        {
+            Output($"{title}\r\n");
+            OutputChampionResults(championResults);
+        }
+
+        //public void Output(ContestResult contestResult)
+        //{
+        //    Output($"{contestResult.Contest.ToString()}\r\n");
+        //    OutputChampionResults(contestResult.ChampionResults, "* Winner(s) of this contest: *");
+        //}
+
+        public void Output(ContestResult contestResult)
+        {
+            Output($"{contestResult.Contest.ToString()}\r\n");
+            //Output(contestResult.ToString());
         }
 
     }

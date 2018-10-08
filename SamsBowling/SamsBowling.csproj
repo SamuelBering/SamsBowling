@@ -47,6 +47,7 @@
     <Compile Include="Models\CalculateChampionStrategy.cs" />
     <Compile Include="Models\CalculateWinnerStrategy.cs" />
     <Compile Include="Models\ChampionResult.cs" />
+    <Compile Include="Models\ContestResult.cs" />
     <Compile Include="Models\ILane.cs" />
     <Compile Include="Models\ILaneService.cs" />
     <Compile Include="Models\MockLane.cs" />

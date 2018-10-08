@@ -10,5 +10,6 @@ namespace SamsBowling.Models
     {
         CalculateWinnerStrategy CalculateWinnerStrategy { get; set; }
         MatchResult RunMatch(Match match);
+        List<MatchResult> RunContest(Contest contest);
     }
 }

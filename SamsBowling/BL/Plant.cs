@@ -53,13 +53,7 @@ namespace SamsBowling.BL
 
         public void RegisterContest(Contest contest)
         {
-            if (!contest.MatchesIsValid())
-            {
-                var errorMessage = "Two matches can't contain the same players";
-                _plantDependencies.LogService.Output($"***Can´t register contest!!***\r\nError message: {errorMessage}\r\n{contest.ToString()}");
-                throw new InvalidOperationException(errorMessage);
-            }
-             
+            ValidateContest(contest);
             _plantDependencies.PlantRepository.AddContest(contest);
             _plantDependencies.LogService.Output($"***Registering contest***\r\n{contest.ToString()}");
 
@@ -85,6 +79,44 @@ namespace SamsBowling.BL
             _plantDependencies.LogService.Output($"***Running match***\r\n{match.ToString()}");
 
             return matchResult;
+        }
+
+        //public ContestResult RunContest(Contest contest)
+        //{
+        //    ValidateContest(contest);
+        //    var contestResult = new ContestResult();
+        //    contestResult.Contest = contest;
+        //    _plantDependencies.LogService.Output($"***Running contest***\r\n{contest.ToString()}");
+        //    foreach (var match in contest.Matches)
+        //        contestResult.MatchResults.Add(RunMatch(match));
+
+        //    contestResult.ChampionResults = _plantDependencies.CalculateChampionStrategy.CalculateChampion(contest.Matches);            
+        //    _plantDependencies.LogService.Output(contestResult);
+        //    return contestResult;
+        //}
+        public ContestResult RunContest(Contest contest)
+        {
+            ValidateContest(contest);
+            var contestResult = new ContestResult();
+            contestResult.Contest = contest;
+            _plantDependencies.LogService.Output($"***Running contest***\r\n");
+            contestResult.MatchResults = _plantDependencies.LaneService.RunContest(contest);
+            contestResult.ChampionResults = _plantDependencies.CalculateChampionStrategy.CalculateChampion(contest.Matches);
+            contest.ContestResult = contestResult;
+            _plantDependencies.LogService.Output(contestResult);
+            return contestResult;
+        }
+
+
+
+        private void ValidateContest(Contest contest)
+        {
+            if (!contest.MatchesIsValid())
+            {
+                var errorMessage = "Two matches can't contain the same players";
+                _plantDependencies.LogService.Output($"***Can´t register contest!!***\r\nError message: {errorMessage}\r\n{contest.ToString()}");
+                throw new InvalidOperationException(errorMessage);
+            }
         }
     }
 }

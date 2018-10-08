@@ -12,5 +12,6 @@ namespace SamsBowling.Services
     {
         void Output(string message);
         void Output(List<ChampionResult> championResults);
+        void Output(ContestResult contestResult);
     }
 }

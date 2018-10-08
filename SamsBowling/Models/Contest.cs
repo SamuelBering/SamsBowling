@@ -13,11 +13,34 @@ namespace SamsBowling.Models
         public string Description { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
-        public List<Match> Matches { get; set; }
+        public bool Completed { get; set; }
+        public ContestResult ContestResult { get; set; }
+        private List<Match> _matches;
+
+
+        public List<Match> Matches
+        {
+            get
+            {
+                return _matches;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    foreach (var match in value)
+                    {
+                        match.StartDateTime = StartDateTime;
+                    }
+                }
+                _matches = value;
+            }
+        }
 
         public override string ToString()
         {
             var matchInfo = CreateMatchInfo();
+            var contestResultInfo = CreateContestResultInfo();
 
             return $"Contest number: {ContestNumber}\r\n" +
                    $"Title: {Title}\r\n" +
@@ -25,18 +48,13 @@ namespace SamsBowling.Models
                    $"Start date and time: {StartDateTime.ToString()}\r\n" +
                    $"End date and time {EndDateTime.ToString()}\r\n\r\n" +
                    $"Match information:\r\n" +
-                   $"{matchInfo}";
+                   $"{matchInfo}\r\n" +
+                   $"*Contest Result*:\r\n" +
+                   $"{contestResultInfo}\r\n";
         }
 
         public bool MatchesIsValid()
         {
-
-            //skapa validatedmatches
-            //loopa igenom matcherna
-            //  loopa igenom validatedMatches
-            //     om match==validateMatch
-            //        throw ex
-            //  lägg till match i validatedMatches
             if (Matches == null)
                 return true;
 
@@ -44,7 +62,7 @@ namespace SamsBowling.Models
 
             foreach (var match in Matches)
             {
-                foreach(var validMatch in validMatches)
+                foreach (var validMatch in validMatches)
                 {
                     if (Match.HasSamePlayers(match, validMatch))
                         return false;
@@ -70,6 +88,14 @@ namespace SamsBowling.Models
                 matchInfo = "No matches registered";
 
             return matchInfo;
+        }
+
+        private string CreateContestResultInfo()
+        {
+            if (Completed)
+                return ContestResult.ToString();
+            else
+                return "Not completed";
         }
     }
 }

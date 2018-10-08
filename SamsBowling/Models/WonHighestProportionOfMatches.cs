@@ -56,12 +56,8 @@ namespace SamsBowling.Models
         public override List<ChampionResult> CalculateChampion(List<Match> matches)
         {
             var playersWithStatistic = GetUniquePlayers(matches);
-
             CalculateStatistic(playersWithStatistic, matches);
-
             var playersWithHighestProportionOfWonMatches = GetPlayersWithHighestProportionOfWonMatches(playersWithStatistic);
-
-
             var championResults = playersWithHighestProportionOfWonMatches.Select(p =>
               new ChampionResult
               {
@@ -72,31 +68,7 @@ namespace SamsBowling.Models
                   WonMatchesPercent = p.wonMatchesPercent
               }).ToList();
 
-            //var championResult = new ChampionResult
-            //{
-            //    Member = playerWithHighestProportionOfWonMatches.Member,
-            //    Matches = playerWithHighestProportionOfWonMatches.Matches,
-            //    TotalMatches = playerWithHighestProportionOfWonMatches.totalMatches,
-            //    WonMatches = playerWithHighestProportionOfWonMatches.wonMatches,
-            //    WonMatchesPercent = playerWithHighestProportionOfWonMatches.wonMatchesPercent
-            //};
-
             return championResults;
-
-            /*
-             * gör en lista av unika spelareMedStatistik från alla matcher
-             * loopa igenom listan av spelare
-             *     hämta alla matcher där akutell spelaren är med 
-             *     lägg till totalt matchantal i spelaren
-             *     lägg till vunna matcher i spelare
-             *     beräkna andel vunna matcher dvs vunna matcher/totalt antal matcher
-             *     lägg till andel vunna matcher i spelaren
-             *     
-             *                  
-             * hämta den spelareMedstatistik som har störst värde på wonMatchesPercent 
-             * skapa en spelare med denna info och returnera
-             */
-
         }
     }
 }
