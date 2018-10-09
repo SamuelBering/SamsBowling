@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SamsBowling.Plant;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ namespace SamsBowling.Models
         public Player Player2 { get; set; }
         public Set[] Player1Sets { get; set; } = new Set[3];
         public Set[] Player2Sets { get; set; } = new Set[3];
+
         public int Player1TotalPoints
         {
             get
@@ -31,6 +33,20 @@ namespace SamsBowling.Models
         public ILane Lane { get; set; }
         public DateTime? StartDateTime { get; set; }
         public Player Winner { get; set; }
+
+        public bool PlayersAreValid(IPlantRepository repository)
+        {
+            try
+            {
+                var member1 = repository.GetMember(Player1.MemberNumber);
+                var member2 = repository.GetMember(Player2.MemberNumber);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return false;
+            }
+            return true;
+        }
 
         public static bool HasSamePlayers(Match match1, Match match2)
         {

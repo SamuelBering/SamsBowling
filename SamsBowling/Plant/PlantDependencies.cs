@@ -1,12 +1,7 @@
-﻿using SamsBowling.DL;
-using SamsBowling.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SamsBowling.Services;
+using SamsBowling.Strategies;
 
-namespace SamsBowling.Models
+namespace SamsBowling.Plant
 {
     public class PlantDependencies
     {

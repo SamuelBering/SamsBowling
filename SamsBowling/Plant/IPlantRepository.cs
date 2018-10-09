@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SamsBowling.DL
+namespace SamsBowling.Plant
 {
     public interface IPlantRepository
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SamsBowling.Models;
 
-namespace SamsBowling.DL
+namespace SamsBowling.Plant
 {
     public class MockPlantRepository : IPlantRepository
     {

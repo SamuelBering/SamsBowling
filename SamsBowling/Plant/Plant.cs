@@ -1,13 +1,8 @@
-﻿using System;
+﻿using SamsBowling.Models;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SamsBowling.DL;
-using SamsBowling.Models;
-using SamsBowling.Services;
 
-namespace SamsBowling.BL
+namespace SamsBowling.Plant
 {
     public class Plant : IPlant
     {
@@ -76,10 +71,15 @@ namespace SamsBowling.BL
 
         public MatchResult RunMatch(Match match)
         {
+            if (!match.PlayersAreValid(_plantDependencies.PlantRepository))
+            {
+                var errorMessage = "Both players in a match must be registered members";
+                _plantDependencies.LogService.Output($"***Can't run match!***\r\nError message: {errorMessage}\r\nMatch details:\r\n{match.ToString()}");
+                throw new InvalidOperationException(errorMessage);
+            }
+            
             var matchResult = _plantDependencies.LaneService.RunMatch(match);
-
             _plantDependencies.LogService.Output($"***Running match***\r\n{match.ToString()}");
-
             return matchResult;
         }
 

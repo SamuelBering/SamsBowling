@@ -1,7 +1,7 @@
-﻿using SamsBowling.BL;
-using SamsBowling.DL;
-using SamsBowling.Models;
+﻿using SamsBowling.Models;
+using SamsBowling.Plant;
 using SamsBowling.Services;
+using SamsBowling.Strategies;
 using System;
 using System.Collections.Generic;
 using Xunit;
@@ -123,6 +123,39 @@ namespace PlantTests
 
             Assert.Equal(expectedWinner, matchResult.Winner?.FirstName);
 
+        }
+
+        [Theory]
+        [InlineData(50, 100, 50, 50, 50, 99, "Samuel")]
+        public void RunMatch_WithNotRegisteredPlayer_ThrowsException(int player1Set1, int player1Set2, int player1Set3,
+                                                                 int player2Set1, int player2Set2, int player2Set3,
+                                                                 string expectedWinner)
+        {
+            var dependencies = CreatePlantDependencies();
+            var laneService = dependencies.LaneService as MockLaneService;
+
+
+            var plant = new Plant(dependencies);
+
+            var members = GetMembers();
+            plant.RegisterMember(members[0]);
+            //plant.RegisterMember(members[1]);
+
+
+            var match = new Match
+            {
+                MatchNumber = 1,
+                Player1 = new Player(members[0]),
+                Player2 = new Player(members[1]),
+            };
+
+            plant.RegisterMatch(match);
+
+            laneService.Player1Sets = CreateSets(player1Set1, player1Set2, player1Set3);
+            laneService.Player2Sets = CreateSets(player2Set1, player2Set2, player2Set3);
+
+            var ex = Assert.Throws<InvalidOperationException>(() => plant.RunMatch(match));
+            Assert.Equal("Both players in a match must be registered members", ex.Message);
         }
 
         [Fact]

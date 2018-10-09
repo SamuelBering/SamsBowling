@@ -1,10 +1,12 @@
-﻿using System;
+﻿using SamsBowling.Models;
+using SamsBowling.Strategies;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SamsBowling.Models
+namespace SamsBowling.Services
 {
     public class MockLaneService : ILaneService
     {
