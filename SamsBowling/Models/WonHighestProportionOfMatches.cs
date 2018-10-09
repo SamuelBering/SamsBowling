@@ -8,6 +8,13 @@ namespace SamsBowling.Models
 {
     public class WonHighestProportionOfMatches : CalculateChampionStrategy
     {
+        int _minPlayedMatches;
+
+        public WonHighestProportionOfMatches(int minPlayedMatches)
+        {
+            _minPlayedMatches = minPlayedMatches;
+        }
+
         class PlayerWithStatistic
         {
             public int memberNumber;
@@ -50,7 +57,7 @@ namespace SamsBowling.Models
         private List<PlayerWithStatistic> GetPlayersWithHighestProportionOfWonMatches(List<PlayerWithStatistic> players)
         {
             var player = players.OrderByDescending(p => p.wonMatchesPercent).First();
-            return players.Where(p => p.wonMatchesPercent == player.wonMatchesPercent).ToList();
+            return players.Where(p => p.wonMatchesPercent == player.wonMatchesPercent && p.totalMatches>=_minPlayedMatches).ToList();
         }
 
         public override List<ChampionResult> CalculateChampion(List<Match> matches)

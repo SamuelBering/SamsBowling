@@ -14,6 +14,9 @@ namespace SamsBowling.Models
 
         public override string ToString()
         {
+            if (ChampionResults.Count == 0)
+                return "No result yet!";
+
             var championResultsStr = "";
 
             foreach (var championResult in ChampionResults)

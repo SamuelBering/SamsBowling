@@ -68,8 +68,10 @@ namespace SamsBowling.BL
 
         public void RegisterMember(Member member)
         {
-            _plantDependencies.PlantRepository.AddMember(member);
             _plantDependencies.LogService.Output($"***Registering member***\r\n{member.ToString()}");
+            _plantDependencies.PlantRepository.AddMember(member);
+            _plantDependencies.LogService.Output($"***Exporting member to Fortnox***\r\n{member.ToString()}");
+            _plantDependencies.ExportMemberService.ExportMember(member);        
         }
 
         public MatchResult RunMatch(Match match)
@@ -81,19 +83,6 @@ namespace SamsBowling.BL
             return matchResult;
         }
 
-        //public ContestResult RunContest(Contest contest)
-        //{
-        //    ValidateContest(contest);
-        //    var contestResult = new ContestResult();
-        //    contestResult.Contest = contest;
-        //    _plantDependencies.LogService.Output($"***Running contest***\r\n{contest.ToString()}");
-        //    foreach (var match in contest.Matches)
-        //        contestResult.MatchResults.Add(RunMatch(match));
-
-        //    contestResult.ChampionResults = _plantDependencies.CalculateChampionStrategy.CalculateChampion(contest.Matches);            
-        //    _plantDependencies.LogService.Output(contestResult);
-        //    return contestResult;
-        //}
         public ContestResult RunContest(Contest contest)
         {
             ValidateContest(contest);

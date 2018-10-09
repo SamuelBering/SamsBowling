@@ -67,10 +67,10 @@
     <Compile Include="Models\WonHighestProportionOfMatches.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ExportMemberService.cs" />
+    <Compile Include="Services\MockExportMemberService.cs" />
     <Compile Include="Services\IExportMemberService.cs" />
     <Compile Include="Services\ILogService.cs" />
-    <Compile Include="Services\LogService.cs" />
+    <Compile Include="Services\FileLogService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
